@@ -1,2 +1,20 @@
+<% content_for :head do -%>
+  <%= javascript_pack_tag 'components/recipes/edit' %>
+<% end -%>
+
 <h1>Recipe#edit</h1>
 <%= @recipe.name %>
+
+<%= content_tag :div,
+  id: "recipe_edit",
+  data: {
+    recipe: @recipe.to_json,
+    fragments: @recipe.fragments.to_json
+  } do %>
+  <div v-for="(fragment, index) in fragments">
+    <component :is="fragmentHeader" :data="fragment" v-if="fragment.fragment_type === 'header'"></component>
+    <component :is="fragmentParagraph" :data="fragment" v-if="fragment.fragment_type === 'paragraph'"></component>
+  </div>
+  <button v-on:click="addFragment" data-type="header">+ Add Header</button>
+  <button v-on:click="addFragment" data-type="paragraph">+ Add Paragraph</button>
+<% end %>
