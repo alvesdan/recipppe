@@ -13,9 +13,11 @@ class RecipeTest < ActiveSupport::TestCase
 
   test "it can load fragments" do
     recipe = Recipe.create(name: "Feijoada")
-    fragment = recipe.fragments.create(fragment_type: "Recipe::Title")
-    fragment.create_title(text: "Feijoada")
+    fragment = recipe.fragments.create(
+      fragment_type: "header",
+      html_content: "Feijoada"
+    )
 
-    assert_equal recipe.fragments.first.title.text, "Feijoada"
+    assert_equal recipe.fragments.first.html_content, "Feijoada"
   end
 end

@@ -9,9 +9,9 @@ class FragmentTest < ActiveSupport::TestCase
     fragment = @recipe.fragments.new
     assert_not fragment.save
   end
-  
+
   test "it can create fragment with type" do
-    fragment = @recipe.fragments.new(fragment_type: "Recipe::Title")
+    fragment = @recipe.fragments.new(fragment_type: "header")
     assert fragment.save
   end
 end

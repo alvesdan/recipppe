@@ -4,6 +4,7 @@ class CreateFragments < ActiveRecord::Migration[5.2]
       t.belongs_to :recipe
       t.string :fragment_type, null: false
       t.integer :position
+      t.text :html_content
       t.timestamps
     end
   end
