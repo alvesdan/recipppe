@@ -1,6 +1,5 @@
 <template>
-  <p class="fragment fragment-paragraph"
-      :ref="data.id"
+  <p class="fragment-paragraph"
       contenteditable dir="auto"
       v-html="data.html_content"
       @keydown.enter.prevent
@@ -16,28 +15,17 @@ export default {
     data: Object
   },
   methods: {
-    updateHTMLContent: function (event) {
-      this.data.html_content = event.target.innerText
-      let url = this.buildFragmentUpdateUrl(this.data)
+    updateHTMLContent: function(event) {
+      if (this.data.html_content.trim() == event.target.innerText.trim()) {
+        return
+      }
 
-      this.$http
-        .patch(url, {
-          fragment: {
-            html_content:
-            this.data.html_content
-          }
-        })
-        .then(response => {
-          this.data.updated_at = response.data.updated_at
-          return
-        }, response => {
-          console.log("Error while updating fragment")
-          return
-        })
+      this.data.html_content = event.target.innerText.trim()
+      this.$root.updateFragment(this)
     }
+  },
+  mounted: function() {
+    this.$el.focus()
   }
 }
 </script>
-
-<style scoped>
-</style>

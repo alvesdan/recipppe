@@ -2,6 +2,7 @@
 import TurbolinksAdapter from 'vue-turbolinks'
 import Vue from 'vue/dist/vue.esm'
 import VueResource from 'vue-resource'
+import draggable from 'vuedraggable'
 import Mixins from './mixins.js'
 import FragmentHeader from './fragments/header.vue'
 import FragmentParagraph from './fragments/paragraph.vue'
@@ -26,22 +27,51 @@ document.addEventListener('turbolinks:load', () => {
       recipe: recipeData,
       fragments: recipeFragments,
       fragmentHeader: FragmentHeader,
-      fragmentParagraph: FragmentParagraph
+      fragmentParagraph: FragmentParagraph,
+      fragmentList: null,
+      draggableOptions: {
+        draggable: ".fragment",
+        handle: ".draggable-handle"
+      }
     },
     methods: {
-      addFragment: function(event) {
-        let type = event.target.dataset.type
-        let url = this.buildFragmentCreateUrl(this.recipe)
-        let position = this.fragments.length
+      onDraggableEnd: function(event) {
+        let htmlFragments = this.$el.getElementsByClassName("fragment"),
+            positions = {},
+            index = 0
+
+        for (let fragment of htmlFragments) {
+          positions[fragment.dataset.id] = { position: index }
+          index++
+        }
+        this.updateFragmentsPositions(positions)
+      },
+      updateFragmentsPositions: function(positions) {
+        let url = this.buildFragmentsPositionsUpdateUrl(this.recipe)
 
         this.$http
-          .post(url, {
-            fragment: {
-              fragment_type: type,
-              html_content: "",
-              position: position
-            }
+          .patch(url, { fragments: positions })
+          .then(response => {
+            // Positions have been updated
+          }, response => {
+            console.log("Error while creating fragment")
+            return
           })
+      },
+      addFragment: function(event) {
+        let type = event.target.dataset.type,
+            url = this.buildFragmentCreateUrl(this.recipe),
+            position = this.fragments.length,
+            params = {
+              fragment: {
+                fragment_type: type,
+                html_content: "",
+                position: position
+              }
+            }
+
+        this.$http
+          .post(url, params)
           .then(response => {
             let fragment = response.data
             this.fragments.push(fragment)
@@ -50,8 +80,28 @@ document.addEventListener('turbolinks:load', () => {
             console.log("Error while creating fragment")
             return
           })
+      },
+      updateFragment: function(fragment) {
+        let url = this.buildFragmentUpdateUrl(fragment.data),
+            params = {
+              fragment: {
+                html_content: fragment.data.html_content
+              }
+            }
+
+        this.$http
+          .patch(url, params)
+          .then(response => {
+            fragment.data.updated_at = response.data.updated_at
+            return
+          }, response => {
+            console.log("Error while updating fragment")
+            return
+          })
       }
     },
-    //components: [ DynamicFragment ]
+    components: {
+      draggable
+    }
   })
 })
