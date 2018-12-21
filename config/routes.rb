@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get 'pages/home'
 
   resources :recipes, only: [:show, :edit] do
+    patch :update_fragments_positions
     resources :fragments, only: [:index, :create, :update]
   end
 end
