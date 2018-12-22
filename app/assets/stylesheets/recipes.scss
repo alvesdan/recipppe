@@ -1,13 +1,18 @@
 #recipe_edit {
   .fragment {
     position: relative;
-    padding-left: 30px;
+    padding-left: 50px;
 
     span.draggable-handle {
       position: absolute;
-      left: 0;
+      left: 10px;
       top: 0;
       cursor: pointer;
+      width: 30px;
+      height: 30px;
+      background: #000;
+      color: #fff;
+      display: block;
     }
   }
 }
