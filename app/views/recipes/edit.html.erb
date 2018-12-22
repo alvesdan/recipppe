@@ -11,13 +11,17 @@
     recipe: @recipe.to_json,
     fragments: @recipe.fragments.to_json
   } do %>
-  <draggable v-model="fragmentList" :options="draggableOptions" @end="onDraggableEnd">
+  <draggable v-model="fragmentSortableList" :options="draggableOptions" @end="onDraggableEnd">
     <div v-for="(fragment, index) in fragments" class="fragment" :data-id="fragment.id">
       <span class="draggable-handle">[ ]</span>
       <component :is="fragmentHeader" :data="fragment" v-if="fragment.fragment_type === 'header'"></component>
       <component :is="fragmentParagraph" :data="fragment" v-else-if="fragment.fragment_type === 'paragraph'"></component>
+      <component :is="fragmentList" :data="fragment" v-else-if="fragment.fragment_type === 'ordered_list'"></component>
+      <component :is="fragmentList" :data="fragment" v-else-if="fragment.fragment_type === 'unordered_list'"></component>
     </div>
   </draggable>
   <button v-on:click="addFragment" data-type="header">+ Add Header</button>
   <button v-on:click="addFragment" data-type="paragraph">+ Add Paragraph</button>
+  <button v-on:click="addFragment" data-type="ordered_list">+ Add Ordered list</button>
+  <button v-on:click="addFragment" data-type="unordered_list">+ Add Unordered list</button>
 <% end %>

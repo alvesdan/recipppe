@@ -6,6 +6,7 @@ import draggable from 'vuedraggable'
 import Mixins from './mixins.js'
 import FragmentHeader from './fragments/header.vue'
 import FragmentParagraph from './fragments/paragraph.vue'
+import FragmentList from './fragments/list.vue'
 
 Vue.use(TurbolinksAdapter)
 Vue.use(VueResource)
@@ -20,6 +21,12 @@ document.addEventListener('turbolinks:load', () => {
   const dataset = document.getElementById('recipe_edit').dataset
   const recipeData = JSON.parse(dataset.recipe)
   const recipeFragments = JSON.parse(dataset.fragments)
+  const defaultContent = {
+    header: "",
+    paragraph: "",
+    ordered_list: "<li></li>",
+    unordered_list: "<li></li>"
+  }
 
   const app = new Vue({
     el: '#recipe_edit',
@@ -28,7 +35,8 @@ document.addEventListener('turbolinks:load', () => {
       fragments: recipeFragments,
       fragmentHeader: FragmentHeader,
       fragmentParagraph: FragmentParagraph,
-      fragmentList: null,
+      fragmentList: FragmentList,
+      fragmentSortableList: null,
       draggableOptions: {
         draggable: ".fragment",
         handle: ".draggable-handle"
@@ -65,7 +73,7 @@ document.addEventListener('turbolinks:load', () => {
             params = {
               fragment: {
                 fragment_type: type,
-                html_content: "",
+                html_content: defaultContent[type],
                 position: position
               }
             }
