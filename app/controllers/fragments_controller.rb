@@ -1,6 +1,6 @@
 class FragmentsController < ApplicationController
   before_action :load_recipe
-  before_action :load_fragment, only: [:update]
+  before_action :load_fragment, only: [:update, :destroy]
 
   def index
     @fragments = @recipe.fragments
@@ -20,6 +20,14 @@ class FragmentsController < ApplicationController
 
   def update
     @fragment.update!(fragment_params)
+
+    respond_to do |format|
+      format.json { render json: @fragment }
+    end
+  end
+
+  def destroy
+    @fragment.destroy!
 
     respond_to do |format|
       format.json { render json: @fragment }

@@ -15,7 +15,7 @@ class FragmentsControllerTest < ActionDispatch::IntegrationTest
     post recipe_fragments_url(@recipe, format: :json),
       params: { fragment: { fragment_type: "header", html_content: "Feijoada" } }
 
-    assert_equal @recipe.fragments.last.html_content, "Feijoada"
+    assert_equal @recipe.fragments.where(html_content: "Feijoada").first.html_content, "Feijoada"
   end
 
   test "it can update a title fragment" do
@@ -23,5 +23,10 @@ class FragmentsControllerTest < ActionDispatch::IntegrationTest
       params: { fragment: { html_content: "Feijoada da Boa!" } }
 
     assert_equal @fragment.reload.html_content, "Feijoada da Boa!"
+  end
+
+  test "it can delete a fragment" do
+    delete recipe_fragment_url(@recipe, @fragment, format: :json)
+    assert_response :success
   end
 end
