@@ -26,7 +26,7 @@ export default {
     }
   },
   mounted: function() {
-    this.$el.focus()
+    this.placeCareAtEndOf(this.$el)
   }
 }
 </script>
