@@ -3,6 +3,7 @@
       contenteditable dir="auto"
       v-html="data.html_content"
       @keydown.enter.prevent
+      @keydown.backspace="handleBackspace($event)"
       @blur="updateHTMLContent($event)">
   </h2>
 </template>
@@ -23,10 +24,20 @@ export default {
 
       this.data.html_content = event.target.innerText.trim()
       this.$root.updateFragment(this)
+    },
+    handleBackspace: function(event) {
+      let content = this.$el.innerText.trim()
+      if (content == "") {
+        event.preventDefault()
+        this.$el.removeEventListener("blur", this.updateHTMLContent)
+        this.$root.removeFragment(this)
+      }
     }
   },
   mounted: function() {
-    this.placeCareAtEndOf(this.$el)
+    if (this.$root.allowAutoFocus) {
+      this.placeCareAtEndOf(this.$el)
+    }
   }
 }
 </script>

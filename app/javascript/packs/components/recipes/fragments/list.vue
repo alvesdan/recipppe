@@ -46,7 +46,7 @@ export default {
 
       // Handling "backspace"
       if (event.keyCode == 8) {
-        let content = event.target.innerText
+        let content = event.target.innerText.trim()
         if (content == "") {
           event.preventDefault()
           let lineItem = event.target
@@ -55,6 +55,9 @@ export default {
             lineItem.parentNode.removeChild(lineItem)
             this.placeCareAtEndOf(previous)
             this.updateHTMLContent()
+          } else {
+            lineItem.removeEventListener("blur", this.updateHTMLContent)
+            this.$root.removeFragment(this)
           }
         }
       }
@@ -94,7 +97,9 @@ export default {
       lineItem.addEventListener("blur", this.updateHTMLContent)
     }
 
-    this.focusEndOfLastItem()
+    if (this.$root.allowAutoFocus) {
+      this.focusEndOfLastItem()
+    }
   }
 }
 </script>

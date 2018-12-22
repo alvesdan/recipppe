@@ -14,10 +14,10 @@
   <draggable v-model="fragmentSortableList" :options="draggableOptions" @end="onDraggableEnd">
     <div v-for="(fragment, index) in fragments" class="fragment" :data-id="fragment.id">
       <span class="draggable-handle">[ ]</span>
-      <component :is="fragmentHeader" :data="fragment" v-if="fragment.fragment_type === 'header'"></component>
-      <component :is="fragmentParagraph" :data="fragment" v-else-if="fragment.fragment_type === 'paragraph'"></component>
-      <component :is="fragmentList" :data="fragment" v-else-if="fragment.fragment_type === 'ordered_list'"></component>
-      <component :is="fragmentList" :data="fragment" v-else-if="fragment.fragment_type === 'unordered_list'"></component>
+      <component :is="fragmentHeader" :key="fragment.id" :data="fragment" v-if="fragment.fragment_type === 'header'"></component>
+      <component :is="fragmentParagraph" :key="fragment.id" :data="fragment" v-else-if="fragment.fragment_type === 'paragraph'"></component>
+      <component :is="fragmentList" :key="fragment.id" :data="fragment" v-else-if="fragment.fragment_type === 'ordered_list'"></component>
+      <component :is="fragmentList" :key="fragment.id" :data="fragment" v-else-if="fragment.fragment_type === 'unordered_list'"></component>
     </div>
   </draggable>
   <button v-on:click="addFragment" data-type="header">+ Add Header</button>

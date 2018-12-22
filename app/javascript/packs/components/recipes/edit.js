@@ -40,7 +40,8 @@ document.addEventListener('turbolinks:load', () => {
       draggableOptions: {
         draggable: ".fragment",
         handle: ".draggable-handle"
-      }
+      },
+      allowAutoFocus: true
     },
     methods: {
       onDraggableEnd: function(event) {
@@ -104,6 +105,30 @@ document.addEventListener('turbolinks:load', () => {
             return
           }, response => {
             console.log("Error while updating fragment")
+            return
+          })
+      },
+      removeFragment: function(fragment) {
+        let previous = fragment.$el.parentElement.previousElementSibling,
+            index = this.fragments.indexOf(fragment.data),
+            url = this.buildFragmentDeleteUrl(fragment.data)
+
+        this.allowAutoFocus = false
+        this.fragments.splice(index, 1)
+
+        this.$http
+          .delete(url)
+          .then(response => {
+            // Fragment deleted
+            if (previous) {
+              let items = previous.querySelectorAll("[contenteditable=true]"),
+                  lastItem = items[items.length - 1]
+              this.placeCareAtEndOf(lastItem)
+            }
+            this.allowAutoFocus = true
+            return
+          }, response => {
+            console.log("Error while removing fragment")
             return
           })
       }
