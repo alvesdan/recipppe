@@ -2,26 +2,61 @@
   <%= javascript_pack_tag 'components/recipes/edit' %>
 <% end -%>
 
-<h1>Recipe#edit</h1>
-<%= @recipe.name %>
+<div class="container recipe-page edit-recipe">
+  <div class="columns">
+    <div class="column col-md-12 left-column">
 
-<%= content_tag :div,
-  id: "recipe_edit",
-  data: {
-    recipe: @recipe.to_json,
-    fragments: @recipe.fragments.to_json
-  } do %>
-  <draggable v-model="fragmentSortableList" :options="draggableOptions" @end="onDraggableEnd">
-    <div v-for="(fragment, index) in fragments" class="fragment" :data-id="fragment.id">
-      <span class="draggable-handle">[ ]</span>
-      <component :is="fragmentHeader" :key="fragment.id" :data="fragment" v-if="fragment.fragment_type === 'header'"></component>
-      <component :is="fragmentParagraph" :key="fragment.id" :data="fragment" v-else-if="fragment.fragment_type === 'paragraph'"></component>
-      <component :is="fragmentList" :key="fragment.id" :data="fragment" v-else-if="fragment.fragment_type === 'ordered_list'"></component>
-      <component :is="fragmentList" :key="fragment.id" :data="fragment" v-else-if="fragment.fragment_type === 'unordered_list'"></component>
+      <h1><%= @recipe.name %></h1>
+      <div class="date-created" id="recipeDateCreated">
+        Last edited <timeago :datetime="recipeLastEditedTime" :auto-update="60"></timeago>
+      </div>
     </div>
-  </draggable>
-  <button v-on:click="addFragment" data-type="header">+ Add Header</button>
-  <button v-on:click="addFragment" data-type="paragraph">+ Add Paragraph</button>
-  <button v-on:click="addFragment" data-type="ordered_list">+ Add Ordered list</button>
-  <button v-on:click="addFragment" data-type="unordered_list">+ Add Unordered list</button>
-<% end %>
+
+    <div class="column col-md-12 right-column">
+      <%= content_tag :div,
+        id: "editForm",
+        class: "",
+        data: {
+          recipe: @recipe.to_json,
+          fragments: @recipe.fragments.to_json
+        } do %>
+
+        <div class="edit-header">
+          <%= link_to content_tag(:span, "", class: "icon icon-arrow-left"), root_path, class: "btn btn-link" %>
+          <div class="float-right">
+            <button class="btn edit-order-button" v-on:click="toggleDraggable"><i class="icon icon-resize-vert"></i> Edit order</button>
+          </div>
+        </div>
+
+        <draggable v-model="fragmentSortableList" :options="draggableOptions" @end="onDraggableEnd">
+          <div v-for="(fragment, index) in fragments" class="fragment" :data-id="fragment.id">
+            <span class="draggable-handle c-move"><i class="icon icon-resize-vert"></i></span>
+            <fragment-menu :fragment="fragment"></fragment-menu>
+            <component :is="fragmentHeader" :key="fragment.id" :data="fragment" v-if="fragment.fragment_type === 'header'"></component>
+            <component :is="fragmentParagraph" :key="fragment.id" :data="fragment" v-else-if="fragment.fragment_type === 'paragraph'"></component>
+            <component :is="fragmentList" :key="fragment.id" :data="fragment" v-else-if="fragment.fragment_type === 'ordered_list'"></component>
+            <component :is="fragmentList" :key="fragment.id" :data="fragment" v-else-if="fragment.fragment_type === 'unordered_list'"></component>
+          </div>
+        </draggable>
+
+        <div class="edit-footer">
+          <div class="popover">
+            <button class="btn btn-primary s-circle"><i class="icon icon-plus"></i></button>
+            <div class="popover-container">
+              <div class="card">
+                <div class="card-body">
+                  <div class="btn-group btn-group-block">
+                    <button class="btn btn-link" v-on:click="addFragment" data-type="header">Title</button>
+                    <button class="btn btn-link" v-on:click="addFragment" data-type="paragraph">Text</button>
+                    <button class="btn btn-link" v-on:click="addFragment" data-type="ordered_list">Ordered List</button>
+                    <button class="btn btn-link" v-on:click="addFragment" data-type="unordered_list">List</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div> <!-- right-column -->
+  </div><!-- columns -->
+</div><!-- container -->

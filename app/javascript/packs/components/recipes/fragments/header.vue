@@ -4,6 +4,7 @@
       v-html="data.html_content"
       @keydown.enter.prevent
       @keydown.backspace="handleBackspace($event)"
+      @paste="stripFormatting($event)"
       @blur="updateHTMLContent($event)">
   </h2>
 </template>
@@ -17,7 +18,7 @@ export default {
   },
   methods: {
     updateHTMLContent: function (event) {
-      if (this.data.html_content.trim() == event.target.innerText.trim()) {
+      if (this.data.html_content && this.data.html_content.trim() == event.target.innerText.trim()) {
         // Skip update when there is no change
         return
       }

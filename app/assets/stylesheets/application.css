@@ -11,5 +11,12 @@
  * It is generally better to create a new file per style scope.
  *
  *= require_tree .
+ *= require spectre.css
+ *= require spectre-icons.css
  *= require_self
  */
+
+html, body {
+  with: 100%;
+  height: 100%;
+}

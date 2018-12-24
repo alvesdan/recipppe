@@ -19,7 +19,7 @@ export default {
   methods: {
     updateHTMLContent: function (event) {
       let content = this.$el.innerHTML
-      if (this.data.html_content == content) {
+      if (this.data.html_content && this.data.html_content == content) {
         // Skip update when there is no change
         return
       }
@@ -29,12 +29,21 @@ export default {
     },
     createLineItem: function(event) {
       let lineItem = document.createElement("li")
+      let currentItem = event.target
+      let nextItem = currentItem.nextSibling
 
-      this.$el.append(lineItem)
       lineItem.setAttribute("contenteditable", "true")
       lineItem.addEventListener("keydown", this.handleKeyDown)
+      lineItem.addEventListener("paste", this.stripFormatting)
       lineItem.addEventListener("blur", this.updateHTMLContent)
-      this.focusEndOfLastItem()
+
+      if(nextItem) {
+        this.$el.insertBefore(lineItem, nextItem);
+      } else {
+        this.$el.append(lineItem)
+      }
+
+      this.placeCareAtEndOf(lineItem)
       this.updateHTMLContent()
     },
     handleKeyDown: function(event) {
@@ -95,6 +104,7 @@ export default {
       lineItem.setAttribute("contenteditable", "true")
       lineItem.addEventListener("keydown", this.handleKeyDown)
       lineItem.addEventListener("blur", this.updateHTMLContent)
+      lineItem.addEventListener("paste", this.stripFormatting)
     }
 
     if (this.$root.allowAutoFocus) {

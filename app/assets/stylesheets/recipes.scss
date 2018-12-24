@@ -1,18 +1,136 @@
-#recipe_edit {
-  .fragment {
-    position: relative;
-    padding-left: 50px;
+.recipe-page {
+  @media only screen and (min-width: 840px) {
+    height: 100%;
+    .columns, .column {
+      height: 100%;
+    }
 
-    span.draggable-handle {
-      position: absolute;
-      left: 10px;
-      top: 0;
-      cursor: pointer;
-      width: 30px;
-      height: 30px;
-      background: #000;
-      color: #fff;
-      display: block;
+    .right-column {
+      overflow: scroll;
+    }
+  }
+
+  .left-column, .right-column {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .left-column {
+    background: #eee;
+    padding-left: 30px;
+  }
+
+  .right-column {
+    padding-left: 30px;
+
+    ul, ol {
+      margin-left: 0;
+      li {
+        // TODO
+      }
+    }
+
+    ol {
+      list-style: none;
+      counter-reset: ordered-list-counter;
+      margin: 0;
+      padding: 0;
+      padding-bottom: 20px;
+      li {
+        counter-increment: ordered-list-counter;
+        &:before {
+          content: counter(ordered-list-counter);
+          // font-weight: bold;
+          font-size: 1.5rem;
+          margin-right: 0.5rem;
+          line-height: 1;
+        }
+      }
+    }
+
+    ul {
+      list-style-type: square;
+      margin: 0;
+      padding: 0;
+      padding-bottom: 20px;
+    }
+  }
+}
+
+.edit-recipe {
+  #editForm {
+    [contenteditable] {
+      &:focus {
+        border: 0;
+        outline: none;
+      }
+
+      &:empty {
+        border: 0;
+        &:before {
+          content: "Type to edit content";
+          color: #ccc;
+        }
+      }
+    }
+
+    .edit-header {
+      padding-bottom: 10px;
+      margin-right: 20px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ccc;
+    }
+    .edit-footer {
+      text-align: center;
+      padding: 30px 0;
+      margin-left: -20px;
+    }
+
+    .fragment {
+      position: relative;
+      padding-right: 40px;
+
+      .fragment-menu {
+        position: absolute;
+        right: 10px;
+        top: 5px;
+        .open-menu {
+          color: #ccc;
+        }
+
+        .popover-container {
+          width: 200px;
+          button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            border: 0;
+          }
+        }
+      }
+
+      span.draggable-handle {
+        position: absolute;
+        display: none;
+        right: 10px;
+        top: 5px;
+        width: 20px;
+        height: 20px;
+        background: #fff;
+        color: #ccc;
+        text-align: center;
+        &:hover {
+          color: #000;
+        }
+      }
+    }
+    &.drag-enabled {
+      span.draggable-handle {
+        display: block;
+      }
+      .fragment-menu {
+        display: none;
+      }
     }
   }
 }

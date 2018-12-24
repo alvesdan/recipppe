@@ -1,8 +1,47 @@
-<% content_for :head do -%> 
-  <%= javascript_pack_tag 'home' %>
-<% end -%>
-<h1>Pages#home</h1>
+<div class="container grid-sm">
+  <div class="columns">
+    <div class="column recipppe-home">
+      <h1>Recipppe</h1>
 
-<div id="app">
-  {{ message }}
+      <%= form_for Recipe.new do |f| -%>
+        <div class="form-group">
+          <div class="input-group">
+            <%= f.text_field :name,
+              placeholder: "Name your recipe",
+              class: "form-input",
+              autocomplete: "off" %>
+            <button class="btn btn-primary input-group-btn">Create</button>
+          </div>
+        </div>
+      <% end %>
+
+      <% @recipes.each do |recipe| %>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title h5"><%= recipe.name %></div>
+            <div class="card-subtitle text-gray"><%= time_ago_in_words(recipe.created_at) %></div>
+          </div>
+          <div class="card-body">
+            <div class="float-left">
+              <%= link_to "Edit", edit_recipe_path(recipe), class: "btn" %>
+            </div>
+            <div class="float-right">
+              <div class="popover popover-left">
+                <a class="btn btn-link"><i class="icon icon-more-vert"></i></a>
+                <div class="popover-container">
+                  <div class="card">
+                    <div class="card-body">
+                      <%= link_to recipe_path(recipe), method: :delete, class: "btn btn-link" do -%>
+                        <span class="icon icon-delete"></span> Delete
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>

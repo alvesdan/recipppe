@@ -1,24 +1,27 @@
 /* eslint no-console: 0 */
-import TurbolinksAdapter from 'vue-turbolinks'
+// import TurbolinksAdapter from 'vue-turbolinks'
 import Vue from 'vue/dist/vue.esm'
 import VueResource from 'vue-resource'
 import draggable from 'vuedraggable'
+import VueTimeago from 'vue-timeago'
 import Mixins from './mixins.js'
 import FragmentHeader from './fragments/header.vue'
 import FragmentParagraph from './fragments/paragraph.vue'
 import FragmentList from './fragments/list.vue'
+import FragmentMenu from './fragments/menu.vue'
 
-Vue.use(TurbolinksAdapter)
+// Vue.use(TurbolinksAdapter)
 Vue.use(VueResource)
 Vue.mixin(Mixins)
+Vue.use(VueTimeago)
 
-document.addEventListener('turbolinks:load', () => {
+document.addEventListener('DOMContentLoaded', () => {
   Vue.http.headers.common['X-CSRF-Token'] =
     document
     .querySelector('meta[name="csrf-token"]')
     .getAttribute('content')
 
-  const dataset = document.getElementById('recipe_edit').dataset
+  const dataset = document.getElementById('editForm').dataset
   const recipeData = JSON.parse(dataset.recipe)
   const recipeFragments = JSON.parse(dataset.fragments)
   const defaultContent = {
@@ -28,8 +31,24 @@ document.addEventListener('turbolinks:load', () => {
     unordered_list: "<li></li>"
   }
 
+  const EditedDateApp = new Vue({
+    el: "#recipeDateCreated",
+    data: function() {
+      let lastEditedDate = recipeData.updated_at
+
+      for (let fragment of recipeFragments) {
+        if (fragment.updated_at > lastEditedDate) {
+          lastEditedDate = fragment.updated_at
+        }
+      }
+      return {
+        recipeLastEditedTime: lastEditedDate
+      }
+    }
+  })
+
   const app = new Vue({
-    el: '#recipe_edit',
+    el: '#editForm',
     data: {
       recipe: recipeData,
       fragments: recipeFragments,
@@ -37,13 +56,24 @@ document.addEventListener('turbolinks:load', () => {
       fragmentParagraph: FragmentParagraph,
       fragmentList: FragmentList,
       fragmentSortableList: null,
-      draggableOptions: {
-        draggable: ".fragment",
-        handle: ".draggable-handle"
-      },
+      draggableEditable: false,
       allowAutoFocus: true
     },
+    computed: {
+      draggableOptions() {
+        return {
+          draggable: ".fragment",
+          handle: ".draggable-handle",
+          disabled: !this.draggableEditable
+        }
+      }
+    },
     methods: {
+      toggleDraggable: function() {
+        this.draggableEditable = !this.draggableEditable
+        this.$el.classList.toggle("drag-enabled");
+        this.$el.getElementsByClassName("edit-order-button")[0].classList.toggle("btn-primary")
+      },
       onDraggableEnd: function(event) {
         let htmlFragments = this.$el.getElementsByClassName("fragment"),
             positions = {},
@@ -84,6 +114,7 @@ document.addEventListener('turbolinks:load', () => {
           .then(response => {
             let fragment = response.data
             this.fragments.push(fragment)
+            EditedDateApp.$data.recipeLastEditedTime = response.data.created_at
             return
           }, response => {
             console.log("Error while creating fragment")
@@ -102,6 +133,7 @@ document.addEventListener('turbolinks:load', () => {
           .patch(url, params)
           .then(response => {
             fragment.data.updated_at = response.data.updated_at
+            EditedDateApp.$data.recipeLastEditedTime = response.data.updated_at
             return
           }, response => {
             console.log("Error while updating fragment")
@@ -109,9 +141,13 @@ document.addEventListener('turbolinks:load', () => {
           })
       },
       removeFragment: function(fragment) {
-        let previous = fragment.$el.parentElement.previousElementSibling,
+        let previous = null,
             index = this.fragments.indexOf(fragment.data),
             url = this.buildFragmentDeleteUrl(fragment.data)
+
+        if (fragment.$el) {
+          previous = fragment.$el.parentElement.previousElementSibling
+        }
 
         this.allowAutoFocus = false
         this.fragments.splice(index, 1)
@@ -126,6 +162,7 @@ document.addEventListener('turbolinks:load', () => {
               this.placeCareAtEndOf(lastItem)
             }
             this.allowAutoFocus = true
+            EditedDateApp.$data.recipeLastEditedTime = fragment.data.updated_at
             return
           }, response => {
             console.log("Error while removing fragment")
@@ -134,7 +171,8 @@ document.addEventListener('turbolinks:load', () => {
       }
     },
     components: {
-      draggable
+      draggable,
+      FragmentMenu
     }
   })
 })

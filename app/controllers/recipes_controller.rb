@@ -1,10 +1,27 @@
 class RecipesController < ApplicationController
-  before_action :load_recipe, only: [:show, :edit]
+  before_action :load_recipe, only: [:show, :edit, :destroy]
 
   def show
+    redirect_to edit_recipe_path(@recipe)
+  end
+
+  def create
+    recipe = Recipe.create(recipe_params)
+
+    if recipe.persisted?
+      recipe.fragments.create!(fragment_type: "header", position: 0)
+      redirect_to edit_recipe_path(recipe)
+    else
+      redirect_to root_path
+    end
   end
 
   def edit
+  end
+
+  def destroy
+    @recipe.destroy!
+    redirect_to root_path
   end
 
   def update_fragments_positions
@@ -23,9 +40,15 @@ class RecipesController < ApplicationController
 
   def load_recipe
     @recipe = Recipe.find(params[:id])
+  rescue
+    redirect_to root_path
   end
 
   def load_fragments_params
     params.require(:fragments).permit!
+  end
+
+  def recipe_params
+    params.require(:recipe).permit(:name)
   end
 end
