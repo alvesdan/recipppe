@@ -27,18 +27,21 @@ export default {
       this.data.html_content = content
       this.$root.updateFragment(this)
     },
+    addLineItemEditorAndListeners: function(lineItem) {
+      lineItem.setAttribute("contenteditable", "true")
+      lineItem.addEventListener("keydown", this.handleKeyDown)
+      lineItem.addEventListener("paste", this.stripFormatting)
+      lineItem.addEventListener("blur", this.updateHTMLContent)
+    },
     createLineItem: function(event) {
       let lineItem = document.createElement("li")
       let currentItem = event.target
       let nextItem = currentItem.nextSibling
 
-      lineItem.setAttribute("contenteditable", "true")
-      lineItem.addEventListener("keydown", this.handleKeyDown)
-      lineItem.addEventListener("paste", this.stripFormatting)
-      lineItem.addEventListener("blur", this.updateHTMLContent)
+      this.addLineItemEditorAndListeners(lineItem)
 
       if(nextItem) {
-        this.$el.insertBefore(lineItem, nextItem);
+        this.$el.insertBefore(lineItem, nextItem)
       } else {
         this.$el.append(lineItem)
       }
@@ -101,10 +104,7 @@ export default {
     let lineItems = this.$el.getElementsByTagName("li")
 
     for (let lineItem of lineItems) {
-      lineItem.setAttribute("contenteditable", "true")
-      lineItem.addEventListener("keydown", this.handleKeyDown)
-      lineItem.addEventListener("blur", this.updateHTMLContent)
-      lineItem.addEventListener("paste", this.stripFormatting)
+      this.addLineItemEditorAndListeners(lineItem)
     }
 
     if (this.$root.allowAutoFocus) {

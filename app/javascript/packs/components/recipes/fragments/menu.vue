@@ -8,7 +8,9 @@
             {{ fragment.fragment_type }}: {{ fragment.id }}
           </div>
           <div class="card-body">
-            <button class="btn" v-on:click="removeFragmentFromMenu()"><i class="icon icon-delete"></i> Remove</button>
+            <button class="btn" v-on:click="removeFragmentFromMenu()">
+              <i class="icon icon-delete"></i> Remove
+            </button>
           </div>
         </div>
       </div>

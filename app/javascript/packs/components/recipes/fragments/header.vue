@@ -18,7 +18,8 @@ export default {
   },
   methods: {
     updateHTMLContent: function (event) {
-      if (this.data.html_content && this.data.html_content.trim() == event.target.innerText.trim()) {
+      if (this.data.html_content &&
+          this.data.html_content.trim() == event.target.innerText.trim()) {
         // Skip update when there is no change
         return
       }

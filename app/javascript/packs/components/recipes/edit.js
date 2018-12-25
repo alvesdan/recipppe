@@ -1,5 +1,4 @@
 /* eslint no-console: 0 */
-// import TurbolinksAdapter from 'vue-turbolinks'
 import Vue from 'vue/dist/vue.esm'
 import VueResource from 'vue-resource'
 import draggable from 'vuedraggable'
@@ -10,7 +9,6 @@ import FragmentParagraph from './fragments/paragraph.vue'
 import FragmentList from './fragments/list.vue'
 import FragmentMenu from './fragments/menu.vue'
 
-// Vue.use(TurbolinksAdapter)
 Vue.use(VueResource)
 Vue.mixin(Mixins)
 Vue.use(VueTimeago)
@@ -71,8 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
     methods: {
       toggleDraggable: function() {
         this.draggableEditable = !this.draggableEditable
-        this.$el.classList.toggle("drag-enabled");
-        this.$el.getElementsByClassName("edit-order-button")[0].classList.toggle("btn-primary")
+        this.$el.classList.toggle("drag-enabled")
+        this.$el.getElementsByClassName("edit-order-button")[0]
+          .classList.toggle("btn-primary")
       },
       onDraggableEnd: function(event) {
         let htmlFragments = this.$el.getElementsByClassName("fragment"),
@@ -93,21 +92,31 @@ document.addEventListener('DOMContentLoaded', () => {
           .then(response => {
             // Positions have been updated
           }, response => {
-            console.log("Error while creating fragment")
+            console.log("Error while updating positions")
             return
           })
       },
       addFragment: function(event) {
-        let type = event.target.dataset.type,
-            url = this.buildFragmentCreateUrl(this.recipe),
+        let url = this.buildFragmentCreateUrl(this.recipe),
             position = this.fragments.length,
-            params = {
-              fragment: {
-                fragment_type: type,
-                html_content: defaultContent[type],
-                position: position
-              }
-            }
+            type = event.target.dataset.type
+
+        if (!type) {
+          type = event.target.parentElement.dataset.type
+        }
+
+        let button = event.target.tagName == "I"
+            ? event.target.parentElement
+            : event.target
+        button.classList.add("loading")
+
+        let params = {
+          fragment: {
+            fragment_type: type,
+            html_content: defaultContent[type],
+            position: position
+          }
+        }
 
         this.$http
           .post(url, params)
@@ -115,9 +124,11 @@ document.addEventListener('DOMContentLoaded', () => {
             let fragment = response.data
             this.fragments.push(fragment)
             EditedDateApp.$data.recipeLastEditedTime = response.data.created_at
+            button.classList.remove("loading")
             return
           }, response => {
             console.log("Error while creating fragment")
+            button.classList.remove("loading")
             return
           })
       },

@@ -38,12 +38,13 @@
       padding-bottom: 20px;
       li {
         counter-increment: ordered-list-counter;
-        &:before {
+        &:not(:empty):before {
           content: counter(ordered-list-counter);
           // font-weight: bold;
           font-size: 1.5rem;
           margin-right: 0.5rem;
           line-height: 1;
+          color: #ccc;
         }
       }
     }
@@ -53,6 +54,9 @@
       margin: 0;
       padding: 0;
       padding-bottom: 20px;
+      li:empty {
+        list-style: none;
+      }
     }
   }
 }

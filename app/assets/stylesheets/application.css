@@ -13,6 +13,7 @@
  *= require_tree .
  *= require spectre.css
  *= require spectre-icons.css
+ *= require font-awesome
  *= require_self
  */
 
