@@ -33,6 +33,24 @@ export default {
         "/update_fragments_positions.json"
       ])
     },
+    buildFragmentAddImageUrl: function(fragment) {
+      return this.joinPath([
+        "recipes",
+        fragment.recipe_id,
+        "fragments",
+        fragment.id,
+        "add_image.json"
+      ])
+    },
+    buildFragmentRemoveImageUrl: function(fragment) {
+      return this.joinPath([
+        "recipes",
+        fragment.recipe_id,
+        "fragments",
+        fragment.id,
+        "remove_image.json"
+      ])
+    },
     placeCareAtEndOf: function(el) {
       el.focus()
       if (typeof window.getSelection != "undefined" &&

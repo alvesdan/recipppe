@@ -1,3 +1,9 @@
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+@-moz-keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+@-webkit-keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+@-ms-keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+@-o-keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
 .recipe-page {
   @media only screen and (min-width: 840px) {
     height: 100%;
@@ -58,6 +64,12 @@
         list-style: none;
       }
     }
+
+    .carousel-item {
+      img {
+        width: 100%;
+      }
+    }
   }
 }
 
@@ -100,6 +112,10 @@
         top: 5px;
         .open-menu {
           color: #ccc;
+          display: block;
+          text-align: center;
+          width: 20px;
+          height: 30px;
         }
 
         .popover-container {
@@ -110,6 +126,53 @@
             text-align: left;
             border: 0;
           }
+        }
+      }
+
+      .fragment-image {
+        position: relative;
+
+        .progress-holder {
+          position: absolute;
+          left: 0;
+          bottom: -7px;
+          width: 100%;
+          z-index: 99;
+          transition: all .2s ease;
+        }
+        .dropzone {
+          position: relative;
+        }
+
+        .dz-preview {
+          display: none;
+        }
+
+        .dz-default {
+          padding: 5px 10px;
+          margin-bottom: 10px;
+          color: #5755d9;
+          cursor: pointer;
+          transition: all .2s ease;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          position: absolute;
+          left: 0;
+          top: 10px;
+          z-index: 99;
+          background: #f1f1fc;
+          &:hover {
+            background: #fff;
+          }
+        }
+
+        .image-actions {
+          display: flex;
+          position: absolute;
+          top: 10px;
+          right: 10px;
         }
       }
 
@@ -128,6 +191,7 @@
         }
       }
     }
+
     &.drag-enabled {
       span.draggable-handle {
         display: block;

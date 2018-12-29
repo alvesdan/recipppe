@@ -4,6 +4,9 @@ Rails.application.routes.draw do
 
   resources :recipes, only: [:show, :create, :edit, :destroy] do
     patch :update_fragments_positions
-    resources :fragments, only: [:index, :create, :update, :destroy]
+    resources :fragments, only: [:index, :create, :update, :destroy] do
+      post :add_image
+      delete :remove_image
+    end
   end
 end

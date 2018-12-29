@@ -7,7 +7,7 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
 
   test "it loads recipe show page" do
     get recipe_url(@recipe, format: "text/html")
-    assert_response :success
+    assert_response :redirect
   end
 
   test "it loads recipe edit page" do

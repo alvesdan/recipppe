@@ -18,7 +18,7 @@
         class: "",
         data: {
           recipe: @recipe.to_json,
-          fragments: @recipe.fragments.to_json
+          fragments: @recipe.fragments.with_eager_loaded_images.to_json
         } do %>
 
         <div class="edit-header">
@@ -36,6 +36,7 @@
             <component :is="fragmentParagraph" :key="fragment.id" :data="fragment" v-else-if="fragment.fragment_type === 'paragraph'"></component>
             <component :is="fragmentList" :key="fragment.id" :data="fragment" v-else-if="fragment.fragment_type === 'ordered_list'"></component>
             <component :is="fragmentList" :key="fragment.id" :data="fragment" v-else-if="fragment.fragment_type === 'unordered_list'"></component>
+            <component :is="fragmentImage" :key="fragment.id" :data="fragment" v-else-if="fragment.fragment_type === 'image'"></component>
           </div>
         </draggable>
 
@@ -50,6 +51,7 @@
                     <button class="btn btn-link" v-on:click="addFragment" data-type="paragraph"><%= fa_icon "paragraph" %></button>
                     <button class="btn btn-link" v-on:click="addFragment" data-type="ordered_list"><%= fa_icon "list-ol" %></button>
                     <button class="btn btn-link" v-on:click="addFragment" data-type="unordered_list"><%= fa_icon "list-ul" %></button>
+                    <button class="btn btn-link" v-on:click="addFragment" data-type="image"><%= fa_icon "image" %></button>
                   </div>
                 </div>
               </div>

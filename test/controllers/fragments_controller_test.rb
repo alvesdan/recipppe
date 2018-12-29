@@ -29,4 +29,34 @@ class FragmentsControllerTest < ActionDispatch::IntegrationTest
     delete recipe_fragment_url(@recipe, @fragment, format: :json)
     assert_response :success
   end
+
+  test "it can upload an image" do
+    file = fixture_file_upload(Rails.root.join('test/fixtures/files/Feijoada.jpg'), 'image/jpeg')
+    fragment = @recipe.fragments.create(fragment_type: "image")
+    post recipe_fragment_add_image_url(@recipe, fragment, format: :json),
+      params: { fragment_image: file }
+
+    assert fragment.images.first
+  end
+
+  test "it cannot upload more than 3 images" do
+    file = fixture_file_upload(Rails.root.join('test/fixtures/files/Feijoada.jpg'), 'image/jpeg')
+    fragment = @recipe.fragments.create(fragment_type: "image")
+    3.times { fragment.images.attach(file) }
+
+    post recipe_fragment_add_image_url(@recipe, fragment, format: :json),
+      params: { fragment_image: file }
+    assert_response :error
+  end
+
+  test "it can remove a fragment image" do
+    file = fixture_file_upload(Rails.root.join('test/fixtures/files/Feijoada.jpg'), 'image/jpeg')
+    fragment = @recipe.fragments.create(fragment_type: "image")
+    fragment.images.attach(file)
+    image_id = fragment.images.last.id
+
+    delete recipe_fragment_remove_image_url(@recipe, fragment, format: :json),
+      params: { image_id: image_id }
+    assert_equal fragment.images.size, 0
+  end
 end

@@ -7,6 +7,7 @@ import Mixins from './mixins.js'
 import FragmentHeader from './fragments/header.vue'
 import FragmentParagraph from './fragments/paragraph.vue'
 import FragmentList from './fragments/list.vue'
+import FragmentImage from './fragments/image.vue'
 import FragmentMenu from './fragments/menu.vue'
 
 Vue.use(VueResource)
@@ -14,10 +15,13 @@ Vue.mixin(Mixins)
 Vue.use(VueTimeago)
 
 document.addEventListener('DOMContentLoaded', () => {
-  Vue.http.headers.common['X-CSRF-Token'] =
-    document
+  const CSRFToken = document
     .querySelector('meta[name="csrf-token"]')
     .getAttribute('content')
+
+  Vue.http.interceptors.push(function(request) {
+    request.headers.set('X-CSRF-Token', CSRFToken);
+  })
 
   const dataset = document.getElementById('editForm').dataset
   const recipeData = JSON.parse(dataset.recipe)
@@ -53,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fragmentHeader: FragmentHeader,
       fragmentParagraph: FragmentParagraph,
       fragmentList: FragmentList,
+      fragmentImage: FragmentImage,
       fragmentSortableList: null,
       draggableEditable: false,
       allowAutoFocus: true
