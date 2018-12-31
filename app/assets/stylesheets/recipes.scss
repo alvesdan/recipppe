@@ -65,9 +65,13 @@
       }
     }
 
-    .carousel-item {
-      img {
-        width: 100%;
+    .fragment-image {
+      margin-bottom: 20px;
+
+      .carousel-item {
+        img {
+          width: 100%;
+        }
       }
     }
   }
