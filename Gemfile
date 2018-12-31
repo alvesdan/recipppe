@@ -69,6 +69,7 @@ end
 
 group :production do
   gem 'sentry-raven'
+  gem 'newrelic_rpm'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
