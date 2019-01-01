@@ -1,24 +1,37 @@
-# README
+# Recipppe
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Configuration
 
-Things you may want to cover:
+* Ruby 2.5.0
+* Rails 5.2.2
+* Postgres
+* Heroku
 
-* Ruby version
+## Running local
 
-* System dependencies
+For Active Storage the default development bucket is at: `eu-west-3` with
+bucket `recipppe-development`. You'll need environment variables:
 
-* Configuration
+  ```
+  ENV['AWS_ACCESS_KEY_ID']
+  ENV['AWS_SECRET_ACCESS_KEY']
+  ```
 
-* Database creation
+For database, configure the environment variables then create and migrate database:
 
-* Database initialization
+  ```
+  ENV['POSTGRES_USER']
+  ENV['POSTGRES_PASSWORD']
+  ```
 
-* How to run the test suite
+  ```
+  $> rake db:create
+  $> rake db:migrate
+  $> heroku local
+  ```
 
-* Services (job queues, cache servers, search engines, etc.)
+Run the server:
 
-* Deployment instructions
-
-* ...
+  ```
+  $> rails server
+  ```
