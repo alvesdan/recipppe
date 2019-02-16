@@ -2,7 +2,7 @@ class RecipesController < ApplicationController
   before_action :load_recipe, only: [:show, :edit, :destroy]
 
   def show
-    redirect_to edit_recipe_path(@recipe)
+    redirect_to edit_recipe_path(@recipe.urid)
   end
 
   def create
