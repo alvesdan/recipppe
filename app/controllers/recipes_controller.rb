@@ -10,7 +10,7 @@ class RecipesController < ApplicationController
 
     if recipe.persisted?
       recipe.fragments.create!(fragment_type: "header", position: 0)
-      redirect_to edit_recipe_path(recipe)
+      redirect_to edit_recipe_path(recipe.urid)
     else
       redirect_to root_path
     end
@@ -39,7 +39,12 @@ class RecipesController < ApplicationController
   protected
 
   def load_recipe
-    @recipe = Recipe.find(params[:id])
+    @recipe =
+      if params[:id]
+        Recipe.find(params[:id])
+      else
+        Recipe.find_by(urid: params[:urid])
+      end
   rescue
     redirect_to root_path
   end

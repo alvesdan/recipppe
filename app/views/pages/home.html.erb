@@ -15,32 +15,34 @@
         </div>
       <% end %>
 
-      <% @recipes.each do |recipe| %>
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title h5"><%= recipe.name %></div>
-            <div class="card-subtitle text-gray"><%= time_ago_in_words(recipe.created_at) %></div>
-          </div>
-          <div class="card-body">
-            <div class="float-left">
-              <%= link_to "Edit", edit_recipe_path(recipe), class: "btn" %>
+      <% if Rails.env.development? %>
+        <% @recipes.each do |recipe| %>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title h5"><%= recipe.name %></div>
+              <div class="card-subtitle text-gray"><%= time_ago_in_words(recipe.created_at) %></div>
             </div>
-            <div class="float-right">
-              <div class="popover popover-left">
-                <a class="btn btn-link"><i class="icon icon-more-vert"></i></a>
-                <div class="popover-container">
-                  <div class="card">
-                    <div class="card-body">
-                      <%= link_to recipe_path(recipe), method: :delete, class: "btn" do -%>
-                        <span class="icon icon-delete"></span> Delete
-                      <% end %>
+            <div class="card-body">
+              <div class="float-left">
+                <%= link_to "Edit", edit_recipe_path(recipe.urid), class: "btn" %>
+              </div>
+              <div class="float-right">
+                <div class="popover popover-left">
+                  <a class="btn btn-link"><i class="icon icon-more-vert"></i></a>
+                  <div class="popover-container">
+                    <div class="card">
+                      <div class="card-body">
+                        <%= link_to recipe_path(recipe), method: :delete, class: "btn" do -%>
+                          <span class="icon icon-delete"></span> Delete
+                        <% end %>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        <% end %>
       <% end %>
     </div>
   </div>
